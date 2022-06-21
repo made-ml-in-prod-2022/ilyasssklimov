@@ -1,4 +1,5 @@
 from airflow import DAG
+from airflow.models import Variable
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.operators.empty import EmptyOperator
 from datetime import timedelta
@@ -9,7 +10,7 @@ from pendulum import today
 default_args = {
     'owner': 'airflow',
     'retries': 1,
-    'retry_delay': timedelta(seconds=5),
+    'retry_delay': timedelta(minutes=1),
 }
 
 
@@ -30,7 +31,7 @@ with DAG(
         mount_tmp_dir=False,
         mounts=[
             Mount(
-                source='D:/IT/Python/vk_ProdML/ilyasssklimov/airflow_ml_dags/data/',
+                source=Variable.get('HOST_FOLDER'),
                 target='/data',
                 type='bind'
             )
