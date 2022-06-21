@@ -15,7 +15,7 @@ default_args = {
 
 
 with DAG(
-        'data_acquisition',
+        'data_generate',
         default_args=default_args,
         schedule_interval='@daily',
         start_date=today('UTC').add(days=-7)
@@ -23,10 +23,10 @@ with DAG(
     start = EmptyOperator(task_id='start_data_acquisition')
 
     generate = DockerOperator(
-        image='airflow-generate-data',
-        task_id="generate_data",
+        image='airflow-generate',
+        task_id='data_generate',
         command='--output-dir=/data/raw/{{ ds }}',
-        network_mode="bridge",
+        network_mode='bridge',
         do_xcom_push=False,
         mount_tmp_dir=False,
         mounts=[
