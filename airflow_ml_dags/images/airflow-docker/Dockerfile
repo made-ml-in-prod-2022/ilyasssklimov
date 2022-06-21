@@ -1,4 +1,4 @@
-ARG AIRFLOW_BASE_IMAGE='apache/airflow:2.6.0-python3.8'
+ARG AIRFLOW_BASE_IMAGE="apache/airflow:2.3.0-python3.8"
 FROM ${AIRFLOW_BASE_IMAGE}
 
 RUN pip install --user --no-cache-dir \

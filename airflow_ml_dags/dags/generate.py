@@ -8,30 +8,35 @@ from pendulum import today
 
 default_args = {
     'owner': 'airflow',
-    'email': ['ilyasssklimov@gmail.com'],
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'retry_delay': timedelta(seconds=10),
 }
 
 
 with DAG(
-        'Data acquisition',
+        'data_acquisition',
         default_args=default_args,
         schedule_interval='@daily',
         start_date=today('UTC').add(days=-7)
 ) as dag:
-    start = EmptyOperator(task_id='Start of data acquisition')
+    start = EmptyOperator(task_id='start_data_acquisition')
 
     generate = DockerOperator(
         image='airflow-generate-data',
         task_id="generate_data",
-        command='--output-dir /data/raw/{{ ds }}',
+        command='/data/raw/{{ ds }}',
         network_mode="bridge",
         do_xcom_push=False,
         mount_tmp_dir=False,
-        mounts=[Mount(source='D:/IT/Python/vk_ProdML/ilyasssklimov/airflow_ml_dags/data/', target='/data', type='bind')]
+        mounts=[
+            Mount(
+                source='/mnt/d/IT/Python/vk_ProdML/ilyasssklimov/airflow_ml_dags/data/',
+                target='/data',
+                type='bind'
+            )
+        ]
     )
 
-    end = EmptyOperator(task_id='End of data acquisition')
+    end = EmptyOperator(task_id='end_data_acquisition')
 
     start >> generate >> end
