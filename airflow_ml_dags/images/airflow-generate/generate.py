@@ -19,7 +19,7 @@ def get_data(state: int) -> typing.Tuple[pandas.DataFrame, pandas.Series]:
 def generate_data(output_dir: str) -> None:
     try:
         state = int(output_dir.split('-')[-1])
-    except ValueError:
+    except (ValueError, AttributeError):
         state = DEFAULT_STATE
 
     data, target = get_data(state)
