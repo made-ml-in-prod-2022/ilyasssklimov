@@ -26,3 +26,7 @@ def generate_data(output_dir: str) -> None:
     os.makedirs(output_dir, exist_ok=True)
     data.to_csv(os.path.join(output_dir, 'data.csv'), index=False)
     target.to_csv(os.path.join(output_dir, 'target.csv'), index=False)
+
+
+if __name__ == '__main__':
+    generate_data()

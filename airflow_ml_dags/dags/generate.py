@@ -9,7 +9,7 @@ from pendulum import today
 default_args = {
     'owner': 'airflow',
     'retries': 1,
-    'retry_delay': timedelta(seconds=10),
+    'retry_delay': timedelta(seconds=5),
 }
 
 
@@ -24,13 +24,13 @@ with DAG(
     generate = DockerOperator(
         image='airflow-generate-data',
         task_id="generate_data",
-        command='/data/raw/{{ ds }}',
+        command='--output-dir=/data/raw/{{ ds }}',
         network_mode="bridge",
         do_xcom_push=False,
         mount_tmp_dir=False,
         mounts=[
             Mount(
-                source='/mnt/d/IT/Python/vk_ProdML/ilyasssklimov/airflow_ml_dags/data/',
+                source='D:/IT/Python/vk_ProdML/ilyasssklimov/airflow_ml_dags/data/',
                 target='/data',
                 type='bind'
             )
