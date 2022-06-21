@@ -72,8 +72,8 @@ services:
 
   generate_data:
     build:
-      context: images/airflow-generate-data
-    image: airflow-generate-data
+      context: images/airflow-generate
+    image: airflow-generate
     restart: "no"
 
 #  ml_base:
