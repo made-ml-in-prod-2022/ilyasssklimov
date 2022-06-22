@@ -7,6 +7,8 @@ import os
 from pendulum import today
 import config as cfg
 
+TEST_SIZE = 0.3
+
 
 with DAG(
         'data_train',
@@ -39,6 +41,15 @@ with DAG(
         mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
     )
 
+    split = DockerOperator(
+        image='airflow-split',
+        command=f'--input-dir={cfg.PREPROCESS_FOLDER} --output-dir={cfg.SPLIT_FOLDER} --test-size={TEST_SIZE}',
+        task_id='data_split',
+        do_xcom_push=False,
+        mount_tmp_dir=False,
+        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
+    )
+
     end = EmptyOperator(task_id='end_data_train')
 
-    start >> [data_wait, target_wait] >> preprocess >> end
+    start >> [data_wait, target_wait] >> preprocess >> split >> end
