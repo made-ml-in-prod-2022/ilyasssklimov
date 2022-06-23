@@ -25,6 +25,7 @@ with DAG(
         mode='poke',
         task_id='wait_for_data'
     )
+
     target_wait = FileSensor(
         filepath=os.path.join(cfg.FULL_DATA_FOLDER, 'target.csv'),
         poke_interval=60,
