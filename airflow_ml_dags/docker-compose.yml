@@ -11,6 +11,7 @@ x-environment: &airflow_environment
   - AIRFLOW__CORE__FERNET_KEY=${FERNET_KEY}
   - AIRFLOW_VAR_HOST_FOLDER=${HOST_FOLDER}
   - AIRFLOW_CONN_FS_DEFAULT=fs://admin:admin@localhost:8080/my-schema?path=/opt/airflow
+  - AIRFLOW_VAR_MODEL_PATH=${MODEL_PATH}
 
 x-airflow-image: &airflow_image apache/airflow:2.3.0-python3.8
 
@@ -99,6 +100,12 @@ services:
     build:
       context: images/airflow-validate
     image: airflow-validate
+    restart: "no"
+
+  predict_target:
+    build:
+      context: images/airflow-predict
+    image: airflow-predict
     restart: "no"
 
 volumes:
