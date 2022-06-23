@@ -14,7 +14,7 @@ def save_model(model: BaseEstimator, output_dir: str) -> None:
         pickle.dump(model, f)
 
 
-@click.command('train_data')
+@click.command('train_model')
 @click.option('--input-dir', help='Input directory from which data is read')
 @click.option('--output-dir', help='Output directory to save model')
 def train_model(input_dir: str, output_dir: str) -> None:
