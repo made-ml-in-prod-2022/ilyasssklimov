@@ -2,8 +2,15 @@ import click
 import pandas
 from sklearn.model_selection import train_test_split
 import os
+from typing import Tuple, List
 
 STATE = 123
+
+
+def save_split_data(datasets: Tuple[pandas.DataFrame], names: List[str], output_dir: str) -> None:
+    os.makedirs(output_dir, exist_ok=True)
+    for dataset, name in zip(datasets, names):
+        dataset.to_csv(os.path.join(output_dir, f'{name}.csv'), index=False)
 
 
 @click.command('split_data')
@@ -13,13 +20,10 @@ STATE = 123
 def split_data(input_dir: str, output_dir: str, test_size: float) -> None:
     data = pandas.read_csv(os.path.join(input_dir, 'data.csv'))
     target = pandas.read_csv(os.path.join(input_dir, 'target.csv'))
-    x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=test_size, random_state=STATE)
+    datasets = train_test_split(data, target, test_size=test_size, random_state=STATE)
 
-    os.makedirs(output_dir, exist_ok=True)
-    x_train.to_csv(os.path.join(output_dir, 'x_train.csv'), index=False)
-    x_test.to_csv(os.path.join(output_dir, 'x_test.csv'), index=False)
-    y_train.to_csv(os.path.join(output_dir, 'y_train.csv'), index=False)
-    y_test.to_csv(os.path.join(output_dir, 'y_test.csv'), index=False)
+    names = ['x_train', 'x_test', 'y_train', 'y_test']
+    save_split_data(datasets, names, output_dir)
 
 
 if __name__ == '__main__':
