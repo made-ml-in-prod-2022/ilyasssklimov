@@ -59,6 +59,15 @@ with DAG(
         mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
     )
 
+    validate = DockerOperator(
+        image='airflow-validate',
+        command=f'--input-model-dir={cfg.MODEL_FOLDER} --input-test-dir={cfg.SPLIT_FOLDER}',
+        task_id='model_validate',
+        do_xcom_push=False,
+        mount_tmp_dir=False,
+        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
+    )
+
     end = EmptyOperator(task_id='end_model_train')
 
-    start >> [data_wait, target_wait] >> preprocess >> split >> train >> end
+    start >> [data_wait, target_wait] >> preprocess >> split >> train >> validate >> end

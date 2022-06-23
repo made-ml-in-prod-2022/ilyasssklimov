@@ -95,6 +95,12 @@ services:
     image: airflow-train
     restart: "no"
 
+  validate_model:
+    build:
+      context: images/airflow-validate
+    image: airflow-validate
+    restart: "no"
+
 volumes:
   logs:
 
