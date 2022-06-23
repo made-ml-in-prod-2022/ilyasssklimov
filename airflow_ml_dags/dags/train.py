@@ -43,7 +43,7 @@ with DAG(
 
     split = DockerOperator(
         image='airflow-split',
-        command=f'--input-dir={cfg.PREPROCESS_FOLDER} --output-dir={cfg.SPLIT_FOLDER} --test-size={TEST_SIZE}',
+        command=f'--input-dir={cfg.PREPROCESS_FOLDER} --output-dir={cfg.PREPROCESS_FOLDER} --test-size={TEST_SIZE}',
         task_id='data_split',
         do_xcom_push=False,
         mount_tmp_dir=False,
@@ -52,7 +52,7 @@ with DAG(
 
     train = DockerOperator(
         image='airflow-train',
-        command=f'--input-dir={cfg.SPLIT_FOLDER} --output-dir={cfg.MODEL_FOLDER}',
+        command=f'--input-dir={cfg.PREPROCESS_FOLDER} --output-dir={cfg.MODEL_FOLDER}',
         task_id='model_train',
         do_xcom_push=False,
         mount_tmp_dir=False,
@@ -61,7 +61,7 @@ with DAG(
 
     validate = DockerOperator(
         image='airflow-validate',
-        command=f'--input-model-dir={cfg.MODEL_FOLDER} --input-test-dir={cfg.SPLIT_FOLDER}',
+        command=f'--input-model-dir={cfg.MODEL_FOLDER} --input-test-dir={cfg.PREPROCESS_FOLDER}',
         task_id='model_validate',
         do_xcom_push=False,
         mount_tmp_dir=False,
