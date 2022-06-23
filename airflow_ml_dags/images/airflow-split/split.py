@@ -2,12 +2,12 @@ import click
 import pandas
 from sklearn.model_selection import train_test_split
 import os
-from typing import Tuple, List
+from typing import Tuple
 
 STATE = 123
 
 
-def save_split_data(datasets: Tuple[pandas.DataFrame], names: List[str], output_dir: str) -> None:
+def save_split_data(datasets: Tuple[pandas.DataFrame, ...], names: Tuple[str, ...], output_dir: str) -> None:
     os.makedirs(output_dir, exist_ok=True)
     for dataset, name in zip(datasets, names):
         dataset.to_csv(os.path.join(output_dir, f'{name}.csv'), index=False)
@@ -22,7 +22,7 @@ def split_data(input_dir: str, output_dir: str, test_size: float) -> None:
     target = pandas.read_csv(os.path.join(input_dir, 'target.csv'))
     datasets = train_test_split(data, target, test_size=test_size, random_state=STATE)
 
-    names = ['x_train', 'x_test', 'y_train', 'y_test']
+    names = ('x_train', 'x_test', 'y_train', 'y_test')
     save_split_data(datasets, names, output_dir)
 
 
