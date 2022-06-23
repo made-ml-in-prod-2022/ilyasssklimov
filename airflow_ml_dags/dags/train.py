@@ -11,12 +11,12 @@ TEST_SIZE = 0.3
 
 
 with DAG(
-        'data_train',
+        'model_train',
         default_args=cfg.default_args,
         schedule_interval='@daily',
         start_date=today('UTC').add(days=-7)
 ) as dag:
-    start = EmptyOperator(task_id='start_data_train')
+    start = EmptyOperator(task_id='start_model_train')
 
     data_wait = FileSensor(
         filepath=os.path.join(cfg.FULL_DATA_FOLDER, 'data.csv'),
@@ -50,6 +50,15 @@ with DAG(
         mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
     )
 
-    end = EmptyOperator(task_id='end_data_train')
+    train = DockerOperator(
+        image='airflow-train',
+        command=f'--input-dir={cfg.SPLIT_FOLDER} --output-dir={cfg.MODEL_FOLDER}',
+        task_id='model_train',
+        do_xcom_push=False,
+        mount_tmp_dir=False,
+        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
+    )
 
-    start >> [data_wait, target_wait] >> preprocess >> split >> end
+    end = EmptyOperator(task_id='end_model_train')
+
+    start >> [data_wait, target_wait] >> preprocess >> split >> train >> end

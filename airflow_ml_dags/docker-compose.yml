@@ -89,6 +89,12 @@ services:
     image: airflow-split
     restart: "no"
 
+  train_model:
+    build:
+      context: images/airflow-train
+    image: airflow-train
+    restart: "no"
+
 volumes:
   logs:
 
