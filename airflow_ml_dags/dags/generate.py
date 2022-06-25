@@ -21,7 +21,8 @@ with DAG(
         network_mode='bridge',
         do_xcom_push=False,
         mount_tmp_dir=False,
-        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
+        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')],
+        on_failure_callback=cfg.log_failure
     )
 
     end = EmptyOperator(task_id='end_data_generate')

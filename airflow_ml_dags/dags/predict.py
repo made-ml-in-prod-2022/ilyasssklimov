@@ -21,7 +21,8 @@ with DAG(
         poke_interval=30,
         timeout=600,
         mode='poke',
-        task_id='wait_for_data'
+        task_id='wait_for_data',
+        on_failure_callback=cfg.log_failure
     )
 
     model_wait = FileSensor(
@@ -29,7 +30,8 @@ with DAG(
         poke_interval=30,
         timeout=600,
         mode='poke',
-        task_id='wait_for_model'
+        task_id='wait_for_model',
+        on_failure_callback=cfg.log_failure
     )
 
     preprocess = DockerOperator(
@@ -38,7 +40,8 @@ with DAG(
         task_id='data_preprocess',
         do_xcom_push=False,
         mount_tmp_dir=False,
-        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
+        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')],
+        on_failure_callback=cfg.log_failure
     )
 
     predict = DockerOperator(
@@ -47,7 +50,8 @@ with DAG(
         task_id='target_predict',
         do_xcom_push=False,
         mount_tmp_dir=False,
-        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')]
+        mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')],
+        on_failure_callback=cfg.log_failure
     )
 
     end = EmptyOperator(task_id='end_target_predict')
