@@ -12,6 +12,13 @@ x-environment: &airflow_environment
   - AIRFLOW_VAR_HOST_FOLDER=${HOST_FOLDER}
   - AIRFLOW_CONN_FS_DEFAULT=fs://admin:admin@localhost:8080/my-schema?path=/opt/airflow
   - AIRFLOW_VAR_MODEL_PATH=${MODEL_PATH}
+  - AIRFLOW__SMTP__SMTP_HOST=smtp.gmail.com
+  - AIRFLOW__SMTP__SMTP_STARTTLS=True
+  - AIRFLOW__SMTP__SMTP_SSL=False
+  - AIRFLOW__SMTP__SMTP_USER=ilyasssklimov@gmail.com
+  - AIRFLOW__SMTP__SMTP_PASSWORD=${SMTP_PASSWORD}
+  - AIRFLOW__SMTP__SMTP_PORT=587
+  - AIRFLOW__SMTP__SMTP_MAIL_FROM=ilyasssklimov@gmail.com
 
 x-airflow-image: &airflow_image apache/airflow:2.3.0-python3.8
 

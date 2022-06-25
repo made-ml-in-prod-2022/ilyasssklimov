@@ -25,8 +25,7 @@ with DAG(
         timeout=600,
         mode='poke',
         task_id='wait_for_data',
-        email_on_failure=True,
-        # on_failure_callback=cfg.log_failure
+        email_on_failure=True
     )
 
     target_wait = FileSensor(
@@ -35,7 +34,7 @@ with DAG(
         timeout=600,
         mode='poke',
         task_id='wait_for_target',
-        on_failure_callback=cfg.log_failure
+        email_on_failure=True
     )
 
     preprocess = DockerOperator(
@@ -45,7 +44,7 @@ with DAG(
         do_xcom_push=False,
         mount_tmp_dir=False,
         mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')],
-        on_failure_callback=cfg.log_failure
+        email_on_failure=True
     )
 
     split = DockerOperator(
@@ -55,7 +54,7 @@ with DAG(
         do_xcom_push=False,
         mount_tmp_dir=False,
         mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')],
-        on_failure_callback=cfg.log_failure
+        email_on_failure=True
     )
 
     train = DockerOperator(
@@ -65,7 +64,7 @@ with DAG(
         do_xcom_push=False,
         mount_tmp_dir=False,
         mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')],
-        on_failure_callback=cfg.log_failure
+        email_on_failure=True
     )
 
     validate = DockerOperator(
@@ -75,9 +74,9 @@ with DAG(
         do_xcom_push=False,
         mount_tmp_dir=False,
         mounts=[Mount(source=cfg.HOST_FOLDER, target='/data', type='bind')],
-        on_failure_callback=cfg.log_failure
+        email_on_failure=True
     )
 
-    end = EmptyOperator(task_id='end_model_train')
+    end = EmptyOperator(task_id='end_model_train', on_success_callback=cfg.log_success)
 
     start >> [data_wait, target_wait] >> preprocess >> split >> train >> validate >> end
