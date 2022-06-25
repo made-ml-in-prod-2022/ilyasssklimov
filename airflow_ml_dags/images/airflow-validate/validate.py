@@ -1,22 +1,24 @@
 import click
+import json
 import pandas
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 import os
 import pickle
+from typing import Dict
 
 STATE = 123
 
 
-def get_metrics(model: LogisticRegression, x_test: pandas.DataFrame, y_test: pandas.DataFrame) -> str:
+def get_metrics(model: LogisticRegression, x_test: pandas.DataFrame, y_test: pandas.DataFrame) -> Dict[str, float]:
     y_pred = model.predict(x_test)
-    metrics = classification_report(y_test, y_pred)
+    metrics = classification_report(y_test, y_pred, output_dict=True)
     return metrics
 
 
-def save_metrics(metrics: str, output_dir: str) -> None:
-    with open(os.path.join(output_dir, 'metrics_log_reg.txt'), 'w') as f:
-        f.write(metrics)
+def save_metrics(metrics: Dict[str, float], output_dir: str) -> None:
+    with open(os.path.join(output_dir, 'metrics_log_reg.json'), 'w') as f:
+        json.dump(metrics, f)
 
 
 @click.command('validate_model')
