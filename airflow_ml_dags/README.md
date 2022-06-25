@@ -23,6 +23,8 @@ cd airflow_ml_dags
 docker compose up --build
 ~~~
 
+---
+
 ## Tests
 ~~~
 cd tests
