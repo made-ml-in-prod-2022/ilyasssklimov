@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: online-inference-v1
-        image: ilyasssklimov/online_inference:v2
+        image: ilyasssklimov/online_inference:v1
         ports:
         - containerPort: 8000
         resources:
