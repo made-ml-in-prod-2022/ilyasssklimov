@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: online-inference
-    image: ilyasssklimov/online_inference:v1
+    image: ilyasssklimov/online_inference:v2
     ports:
     - containerPort: 8000
     resources:
