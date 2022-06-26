@@ -6,6 +6,8 @@ import pandas as pd
 import pickle
 from pydantic import BaseModel
 from sklearn.pipeline import Pipeline
+import sys
+import time
 from typing import List, Optional
 import uvicorn
 
@@ -13,6 +15,9 @@ import uvicorn
 app = FastAPI()
 logger = logging.getLogger(__name__)
 model: Optional[Pipeline] = None
+start_time = time.time()
+SLEEP_TIME = 20
+WORK_TIME = SLEEP_TIME + 60
 
 
 class BreastCancerModel(BaseModel):
@@ -37,6 +42,8 @@ def make_predict(data: List, features: List[str], model_: Pipeline) -> List[Canc
 
 @app.get('/')
 def main():
+    if time.time() - start_time > WORK_TIME:
+        sys.exit(1)
     return 'It is entry point of our predictor'
 
 
@@ -50,6 +57,7 @@ def load_model():
         raise RuntimeError(err)
 
     model = read_model(model_path)
+    time.sleep(SLEEP_TIME)
 
 
 @app.get('/healz')
