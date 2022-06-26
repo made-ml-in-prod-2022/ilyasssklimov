@@ -6,3 +6,5 @@ __pycache__
 *.pkl
 metrics*.txt
 *.png
+!online_inference/data/data.csv
+!online_inference/models/model.pkl
