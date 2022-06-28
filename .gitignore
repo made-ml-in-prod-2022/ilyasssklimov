@@ -1,0 +1,8 @@
+.idea
+venv
+test.py
+__pycache__
+*.csv
+*.pkl
+metrics*.txt
+*.png
